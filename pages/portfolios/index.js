@@ -1,4 +1,29 @@
-const Portfolios = () => {
+import axios from 'axios';
+import Link from 'next/link';
+import PortfolioCard from '@/components/portfolios/portfolio-card';
+
+const fetchPortfolios = () => {
+  const query = `
+    query Portfolios {
+      portfolios {
+        _id,
+        title
+        company
+        companyWebsite
+        location
+        jobTitle
+        description
+        startDate
+        endDate
+      }
+    }`;
+  return axios
+    .post('http://localhost:3000/graphql', { query })
+    .then((response) => response.data.data.portfolios)
+    .catch((err) => console.log(err));
+};
+
+const Portfolios = ({ portfolios }) => {
   return (
     <>
       <section className="section-title">
@@ -10,55 +35,24 @@ const Portfolios = () => {
       </section>
       <section className="pb-5">
         <div className="row">
-          <div className="col-md-4">
-            <div className="card subtle-shadow no-border">
-              <div className="card-body">
-                <h5 className="card-title">Card title</h5>
-                <h6 className="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                <p className="card-text fs-2">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </p>
-              </div>
-              <div className="card-footer no-border">
-                <small className="text-muted">Last updated 3 mins ago</small>
-              </div>
+          {portfolios.map((portfolio) => (
+            <div key={portfolio._id} className="col-md-4">
+              <Link href="/portfolios/[id]" as={`/portfolios/${portfolio._id}`}>
+                <a className="card-link">
+                  <PortfolioCard portfolio={portfolio} />
+                </a>
+              </Link>
             </div>
-          </div>
-          <div className="col-md-4">
-            <div className="card subtle-shadow no-border">
-              <div className="card-body">
-                <h5 className="card-title">Card title</h5>
-                <h6 className="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                <p className="card-text fs-2 ">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </p>
-              </div>
-              <div className="card-footer no-border">
-                <small className="text-muted">Last updated 3 mins ago</small>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-4">
-            <div className="card subtle-shadow no-border">
-              <div className="card-body">
-                <h5 className="card-title">Card title</h5>
-                <h6 className="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                <p className="card-text fs-2 ">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </p>
-              </div>
-              <div className="card-footer no-border">
-                <small className="text-muted">Last updated 3 mins ago</small>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
     </>
   );
+};
+
+Portfolios.getInitialProps = async () => {
+  const portfolios = await fetchPortfolios();
+  return { portfolios };
 };
 
 export default Portfolios;
