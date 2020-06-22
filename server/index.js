@@ -1,3 +1,5 @@
+require('dotenv').config();
+require('./config/database');
 const express = require('express');
 const next = require('next');
 const { ApolloServer, gql } = require('apollo-server-express');
@@ -8,7 +10,6 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 
 const { portfolioQueries, portfolioMutations } = require('./graphql/resolvers');
-
 const { portfolioTypes } = require('./graphql/types');
 
 app.prepare().then(() => {
