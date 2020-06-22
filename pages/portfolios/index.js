@@ -1,7 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
+import { useLazyQuery, useMutation } from '@apollo/react-hooks';
+import { GET_PORTFOLIOS, CREATE_PORTFOLIO } from '@/apollo/queries';
 import PortfolioCard from '@/components/portfolios/portfolio-card';
+import withApollo from '@/hoc/withApollo';
+import { getDataFromTree } from '@apollo/react-ssr';
 
 const graphDeletePortfolio = (id) => {
   const query = `
@@ -46,66 +50,34 @@ const graphUpdatePortfolio = (id) => {
     .catch((err) => console.log(err));
 };
 
-const graphCreatePortfolio = () => {
-  const query = `
-    mutation CreatePortfolio {
-      createPortfolio(input: {
-        title: "New Job"
-        company: "New Company"
-        companyWebsite: "New Website"
-        location: "New Location"
-        jobTitle: "New Job Title"
-        description: "New Desc"
-        startDate: "12/12/2012"
-        endDate: "14/11/2013"
-      }) {
-        _id,
-        title,
-        company,
-        companyWebsite
-        location
-        jobTitle
-        description
-        startDate
-        endDate
-      }
-    }
-  `;
-  return axios
-    .post('http://localhost:3000/graphql', { query })
-    .then((response) => response.data.data.createPortfolio)
-    .catch((err) => console.log(err));
-};
+const Portfolios = () => {
+  const [portfolios, setPortfolios] = useState([]);
+  const [getPortfolios, { loading, data }] = useLazyQuery(GET_PORTFOLIOS);
+  const [createPortfolio] = useMutation(CREATE_PORTFOLIO, {
+    update(cache, { data: { createPortfolio } }) {
+      const { portfolios } = cache.readQuery({ query: GET_PORTFOLIOS });
+      cache.writeQuery({
+        query: GET_PORTFOLIOS,
+        data: { portfolios: [...portfolios, createPortfolio] },
+      });
+    },
+  });
 
-const fetchPortfolios = () => {
-  const query = `
-    query Portfolios {
-      portfolios {
-        _id,
-        title
-        company
-        companyWebsite
-        location
-        jobTitle
-        description
-        startDate
-        endDate
-      }
-    }`;
-  return axios
-    .post('http://localhost:3000/graphql', { query })
-    .then((response) => response.data.data.portfolios)
-    .catch((err) => console.log(err));
-};
+  useEffect(() => {
+    getPortfolios();
+  }, []);
 
-const Portfolios = ({ data }) => {
-  const [portfolios, setPortfolios] = useState(data.portfolios);
+  if (
+    data &&
+    data.portfolios.length > 0 &&
+    (portfolios.length === 0 || data.portfolios.length !== portfolios.length)
+  ) {
+    setPortfolios(data.portfolios);
+  }
 
-  const createPortfolio = async () => {
-    const newPortfolio = await graphCreatePortfolio();
-    const newPortfolios = [...portfolios, newPortfolio];
-    setPortfolios(newPortfolios);
-  };
+  if (loading) {
+    return 'Loading...';
+  }
 
   const updatePortfolio = async (id) => {
     const updatedPortfolio = await graphUpdatePortfolio(id);
@@ -164,9 +136,4 @@ const Portfolios = ({ data }) => {
   );
 };
 
-Portfolios.getInitialProps = async () => {
-  const portfolios = await fetchPortfolios();
-  return { data: { portfolios } };
-};
-
-export default Portfolios;
+export default withApollo(Portfolios, { getDataFromTree });
