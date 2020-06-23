@@ -1,7 +1,8 @@
 require('dotenv').config();
-require('./database');
 const express = require('express');
 const next = require('next');
+const db = require('./database');
+db.connect();
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -10,6 +11,8 @@ const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
   const server = express();
+
+  require('./middlewares').init(server, db);
 
   const apolloServer = require('./graphql').createApolloServer();
   apolloServer.applyMiddleware({ app: server });

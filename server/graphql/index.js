@@ -6,6 +6,7 @@ const {
   userMutations,
 } = require('./resolvers');
 const { portfolioTypes, userTypes } = require('./types');
+const { buildAuthContext } = require('./context');
 const Portfolio = require('./models/portfolio');
 const User = require('./models/user');
 
@@ -26,7 +27,7 @@ exports.createApolloServer = () => {
       deletePortfolio(id: ID): ID
 
       signUp(input: SignUpInput): String
-      signIn: String
+      signIn(input: SignInInput): String
       signOut: String
     }`);
 
@@ -44,6 +45,7 @@ exports.createApolloServer = () => {
     typeDefs,
     resolvers,
     context: () => ({
+      ...buildAuthContext(),
       models: {
         Portfolio: new Portfolio(mongoose.model('Portfolio')),
         User: new User(mongoose.model('User')),

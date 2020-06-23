@@ -9,6 +9,7 @@ const schema = new mongoose.Schema({
   description: { type: String, required: true },
   startDate: { type: Date, required: true },
   endDate: Date,
+  user: { type: mongoose.Schema.ObjectId, ref: 'User' },
   createdAt: { type: Date, default: Date.now },
 });
 
