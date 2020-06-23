@@ -1,5 +1,5 @@
 require('dotenv').config();
-require('./config/database');
+require('./database');
 const express = require('express');
 const next = require('next');
 const { ApolloServer, gql } = require('apollo-server-express');
@@ -19,7 +19,6 @@ app.prepare().then(() => {
     ${portfolioTypes}
 
     type Query {
-      hello: String
       portfolio(id: ID): Portfolio
       portfolios: [Portfolio]
     }
