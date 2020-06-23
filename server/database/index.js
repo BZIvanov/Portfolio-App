@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+// load the model
+require('./models/portfolio');
 
 mongoose.connect(
   process.env.DB_URI,
