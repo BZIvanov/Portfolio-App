@@ -27,7 +27,7 @@ const Posts = () => {
                       <div className="topic-header">
                         <div className="topic-meta">
                           <div className="name-container">
-                            <span className="name">Filip Jerga</span>
+                            <span className="name">Biser Ivanov</span>
                           </div>
                           <div className="date-container">
                             <span className="date">21h</span>
@@ -75,7 +75,7 @@ const Posts = () => {
                       <div className="topic-header">
                         <div className="topic-meta">
                           <div className="name-container">
-                            <span className="name">Filip Jerga</span>
+                            <span className="name">Biser Ivanov</span>
                           </div>
                           <div className="date-container">
                             <span className="date">21h</span>
@@ -123,7 +123,7 @@ const Posts = () => {
                       <div className="topic-header">
                         <div className="topic-meta">
                           <div className="name-container">
-                            <span className="name">Filip Jerga</span>
+                            <span className="name">Biser Ivanov</span>
                           </div>
                           <div className="date-container">
                             <span className="date">21h</span>
