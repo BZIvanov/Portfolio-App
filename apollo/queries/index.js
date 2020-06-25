@@ -112,3 +112,24 @@ export const SIGN_UP = gql`
     )
   }
 `;
+
+export const SIGN_IN = gql`
+  mutation SignIn($email: String!, $password: String!) {
+    signIn(input: { email: $email, password: $password }) {
+      _id
+      username
+      role
+      avatar
+    }
+  }
+`;
+
+export const GET_USER = gql`
+  query User {
+    user {
+      _id
+      username
+      role
+    }
+  }
+`;
