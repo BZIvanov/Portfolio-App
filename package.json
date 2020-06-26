@@ -20,6 +20,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "graphql": "^15.1.0",
+    "moment": "^2.27.0",
     "mongoose": "^5.9.19",
     "next": "9.4.4",
     "next-with-apollo": "^5.0.1",
@@ -31,7 +32,8 @@
     "react-bootstrap": "^1.0.0-beta.16",
     "react-datepicker": "^3.0.0",
     "react-dom": "16.13.1",
-    "react-hook-form": "^5.7.2"
+    "react-hook-form": "^5.7.2",
+    "react-toastify": "^6.0.6"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
