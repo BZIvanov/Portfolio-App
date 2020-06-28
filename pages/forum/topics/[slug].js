@@ -1,21 +1,32 @@
+import { useState, useRef } from 'react';
 import BaseLayout from '@/layouts/BaseLayout';
-import { useGetTopicBySlug, useGetPostsByTopic } from '@/apollo/actions';
+import {
+  useGetTopicBySlug,
+  useGetPostsByTopic,
+  useGetUser,
+  useCreatePost,
+} from '@/apollo/actions';
 import { useRouter } from 'next/router';
 import withApollo from '@/hoc/withApollo';
 import { getDataFromTree } from '@apollo/react-ssr';
+import PostItem from '@/components/forum/post-item';
+import Replier from '@/components/shared/replier';
+import { toast } from 'react-toastify';
 
 const useInitialData = () => {
   const router = useRouter();
   const { slug } = router.query;
   const { data: dataT } = useGetTopicBySlug({ variables: { slug } });
   const { data: dataP } = useGetPostsByTopic({ variables: { slug } });
+  const { data: dataU } = useGetUser();
   const topic = (dataT && dataT.topicBySlug) || {};
   const posts = (dataP && dataP.postsByTopic) || [];
-  return { topic, posts };
+  const user = (dataU && dataU.user) || null;
+  return { topic, posts, user };
 };
 
-const Posts = () => {
-  const { topic, posts } = useInitialData();
+const PostPage = () => {
+  const { topic, posts, user } = useInitialData();
 
   return (
     <BaseLayout>
@@ -26,156 +37,89 @@ const Posts = () => {
           </div>
         </div>
       </section>
-      <section>
-        <div className="fj-post-list">
-          <div className="row">
-            <div className="col-md-9">
-              <div className="topic-post">
-                <article>
-                  <div className="row">
-                    <div className="topic-avatar">
-                      <div className="main-avatar">
-                        <img
-                          className="avatar subtle-shadow"
-                          src="https://i.imgur.com/cVDadwb.png"
-                        ></img>
-                      </div>
-                    </div>
-                    <div className="topic-body">
-                      <div className="topic-header">
-                        <div className="topic-meta">
-                          <div className="name-container">
-                            <span className="name">Biser Ivanov</span>
-                          </div>
-                          <div className="date-container">
-                            <span className="date">21h</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="topic-content">
-                        <div className="cooked">
-                          <p>
-                            Lorem Ipsum is simply dummy text of the printing and
-                            typesetting industry. Lorem Ipsum has been the
-                            industry's standard dummy text ever since the 1500s,
-                            when an unknown printer took a galley of type and
-                            scrambled it to make a type specimen book.
-                          </p>
-                        </div>
-                        <section className="post-menu-area">
-                          <nav className="post-controls">
-                            <div className="actions">
-                              <button className="btn">reply</button>
-                            </div>
-                          </nav>
-                        </section>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-md-9">
-              <div className="topic-post">
-                <article>
-                  <div className="row">
-                    <div className="topic-avatar">
-                      <div className="main-avatar">
-                        <img
-                          className="avatar subtle-shadow"
-                          src="https://i.imgur.com/cVDadwb.png"
-                        ></img>
-                      </div>
-                    </div>
-                    <div className="topic-body">
-                      <div className="topic-header">
-                        <div className="topic-meta">
-                          <div className="name-container">
-                            <span className="name">Biser Ivanov</span>
-                          </div>
-                          <div className="date-container">
-                            <span className="date">21h</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="topic-content">
-                        <div className="cooked">
-                          <p>
-                            Lorem Ipsum is simply dummy text of the printing and
-                            typesetting industry. Lorem Ipsum has been the
-                            industry's standard dummy text ever since the 1500s,
-                            when an unknown printer took a galley of type and
-                            scrambled it to make a type specimen book.
-                          </p>
-                        </div>
-                        <section className="post-menu-area">
-                          <nav className="post-controls">
-                            <div className="actions">
-                              <button className="btn">reply</button>
-                            </div>
-                          </nav>
-                        </section>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-md-9">
-              <div className="topic-post">
-                <article>
-                  <div className="row">
-                    <div className="topic-avatar">
-                      <div className="main-avatar">
-                        <img
-                          className="avatar subtle-shadow"
-                          src="https://i.imgur.com/cVDadwb.png"
-                        ></img>
-                      </div>
-                    </div>
-                    <div className="topic-body">
-                      <div className="topic-header">
-                        <div className="topic-meta">
-                          <div className="name-container">
-                            <span className="name">Biser Ivanov</span>
-                          </div>
-                          <div className="date-container">
-                            <span className="date">21h</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="topic-content">
-                        <div className="cooked">
-                          <p>
-                            Lorem Ipsum is simply dummy text of the printing and
-                            typesetting industry. Lorem Ipsum has been the
-                            industry's standard dummy text ever since the 1500s,
-                            when an unknown printer took a galley of type and
-                            scrambled it to make a type specimen book.
-                          </p>
-                        </div>
-                        <section className="post-menu-area">
-                          <nav className="post-controls">
-                            <div className="actions">
-                              <button className="btn">reply</button>
-                            </div>
-                          </nav>
-                        </section>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Posts posts={posts} topic={topic} user={user} />
     </BaseLayout>
   );
 };
 
-export default withApollo(Posts, { getDataFromTree });
+const Posts = ({ posts, topic, user }) => {
+  const pageEnd = useRef();
+  const [createPost, { error }] = useCreatePost();
+  const [isReplierOpen, setReplierOpen] = useState(false);
+  const [replyTo, setReplyTo] = useState(null);
+
+  const handleCreatePost = async (reply, resetReplier) => {
+    if (replyTo) {
+      reply.parent = replyTo._id;
+    }
+
+    reply.topic = topic._id;
+    await createPost({ variables: reply });
+    resetReplier();
+    setReplierOpen(false);
+    toast.success('Post has been created!', { autoClose: 2000 });
+    scrollToBottom();
+  };
+
+  const scrollToBottom = () =>
+    pageEnd.current.scrollIntoView({ behavior: 'smooth' });
+
+  return (
+    <section className="mb-5">
+      <div className="fj-post-list">
+        {topic._id && <PostItem post={topic} className="topic-post-lead" />}
+        {posts.map((post) => (
+          <div key={post._id} className="row">
+            <div className="col-md-9">
+              <PostItem
+                post={post}
+                canCreate={user !== null}
+                onReply={(reply) => {
+                  setReplyTo(reply);
+                  setReplierOpen(true);
+                }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="row mt-2 mx-0">
+        <div className="col-md-9">
+          <div className="posts-bottom">
+            {user && (
+              <div className="pt-2 pb-2">
+                <button
+                  onClick={() => {
+                    setReplyTo(null);
+                    setReplierOpen(true);
+                  }}
+                  className="btn btn-lg btn-outline-primary"
+                >
+                  Create New Post
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+      <div ref={pageEnd}></div>
+      <Replier
+        isOpen={isReplierOpen}
+        hasTitle={false}
+        onSubmit={handleCreatePost}
+        replyTo={(replyTo && replyTo.user.username) || topic.title}
+        onClose={() => setReplierOpen(false)}
+        closeBtn={() => (
+          <a
+            onClick={() => setReplierOpen(false)}
+            className="btn py-2 ttu gray-10"
+          >
+            Cancel
+          </a>
+        )}
+      />
+    </section>
+  );
+};
+
+export default withApollo(PostPage, { getDataFromTree });

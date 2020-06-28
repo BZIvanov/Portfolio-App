@@ -87,4 +87,10 @@ exports.forumTypes = `
     parent: Post
     createdAt: String
   }
+
+  input PostInput {
+    content: String
+    parent: String
+    topic: String
+  }
 `;
