@@ -12,13 +12,13 @@ exports.portfolioTypes = `
   }
 
   input PortfolioInput {
-    title: String,
-    company: String,
-    companyWebsite: String,
-    location: String,
-    jobTitle: String,
-    description: String,
-    startDate: String,
+    title: String
+    company: String
+    companyWebsite: String
+    location: String
+    jobTitle: String
+    description: String
+    startDate: String
     endDate: String
   }
 `;
@@ -45,5 +45,29 @@ exports.userTypes = `
   input SignInInput {
     email: String!
     password: String!
+  }
+`;
+
+exports.forumTypes = `
+  type ForumCategory {
+    _id: ID
+    title: String
+    subTitle: String
+    slug: String
+  }
+
+  type Author {
+    avatar: String
+    username: String
+  }
+
+  type Topic {
+    _id: ID
+    slug: String
+    title: String
+    content: String
+    forumCategory: ForumCategory
+    user: Author
+    createdAt: String
   }
 `;

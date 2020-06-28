@@ -4,6 +4,8 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 // load the model
 require('./models/portfolio');
 require('./models/user');
+require('./models/forumCategory');
+require('./models/topic');
 
 exports.connect = () => {
   mongoose.connect(
