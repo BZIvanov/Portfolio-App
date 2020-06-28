@@ -5,11 +5,14 @@ const {
   portfolioMutations,
   userMutations,
   userQueries,
+  forumQueries,
 } = require('./resolvers');
-const { portfolioTypes, userTypes } = require('./types');
+const { portfolioTypes, userTypes, forumTypes } = require('./types');
 const { buildAuthContext } = require('./context');
 const Portfolio = require('./models/portfolio');
 const User = require('./models/user');
+const ForumCategory = require('./models/forumCategory');
+const Topic = require('./models/topic');
 
 exports.createApolloServer = () => {
   const typeDefs = gql(`
@@ -17,11 +20,15 @@ exports.createApolloServer = () => {
 
     ${userTypes}
 
+    ${forumTypes}
+
     type Query {
       portfolio(id: ID): Portfolio
       portfolios: [Portfolio]
       userPortfolios: [Portfolio]
       user: User
+      forumCategories: [ForumCategory]
+      topicsByCategory(category: String): [Topic]
     }
 
     type Mutation {
@@ -38,6 +45,7 @@ exports.createApolloServer = () => {
     Query: {
       ...portfolioQueries,
       ...userQueries,
+      ...forumQueries,
     },
     Mutation: {
       ...portfolioMutations,
@@ -53,6 +61,8 @@ exports.createApolloServer = () => {
       models: {
         Portfolio: new Portfolio(mongoose.model('Portfolio'), req.user),
         User: new User(mongoose.model('User')),
+        ForumCategory: new ForumCategory(mongoose.model('ForumCategory')),
+        Topic: new Topic(mongoose.model('Topic')),
       },
     }),
   });
