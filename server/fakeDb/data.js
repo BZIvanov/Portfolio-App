@@ -24,7 +24,7 @@ const data = {
     {
       _id: user1Id,
       avatar:
-        'https://f0.pngfuel.com/png/312/283/man-face-clip-art-png-clip-art-thumbnail.png',
+        'https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-512.png',
       email: 'biser@gmail.com',
       name: 'Biser Ivanov',
       username: 'Biser99',
@@ -35,7 +35,7 @@ const data = {
     {
       _id: user2Id,
       avatar:
-        'https://f0.pngfuel.com/png/312/283/man-face-clip-art-png-clip-art-thumbnail.png',
+        'https://cdn.icon-icons.com/icons2/1736/PNG/512/4043260-avatar-male-man-portrait_113269.png',
       email: 'test@gmail.com',
       name: 'Test User',
       username: 'Test99',
