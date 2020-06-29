@@ -1,17 +1,11 @@
 const slugify = require('slugify');
 const uniqueSlug = require('unique-slug');
+const BaseModel = require('./baseModel');
 
-class Topic {
-  constructor(model, user) {
-    this.Model = model;
-    this.user = user;
-  }
-
-  async _create(data) {
-    const createdTopic = await this.Model.create(data);
-    return this.Model.findById(createdTopic._id)
-      .populate('user')
-      .populate('forumCategory');
+class Topic extends BaseModel {
+  async getRandoms(limit) {
+    const query = await super.getRandoms(limit);
+    return query().populate('user');
   }
 
   getBySlug(slug) {
@@ -22,6 +16,13 @@ class Topic {
 
   getAllByCategory(forumCategory) {
     return this.Model.find({ forumCategory })
+      .populate('user')
+      .populate('forumCategory');
+  }
+
+  async _create(data) {
+    const createdTopic = await this.Model.create(data);
+    return this.Model.findById(createdTopic._id)
       .populate('user')
       .populate('forumCategory');
   }
