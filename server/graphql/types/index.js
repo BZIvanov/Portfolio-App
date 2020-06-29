@@ -88,6 +88,11 @@ exports.forumTypes = `
     createdAt: String
   }
 
+  type PagPosts {
+    posts: [Post]
+    count: Int
+  }
+
   input PostInput {
     content: String
     parent: String
