@@ -99,4 +99,13 @@ export const useCreateTopic = () =>
 export const useGetPostsByTopic = (options) =>
   useQuery(POSTS_BY_TOPIC, options);
 
-export const useCreatePost = () => useMutation(CREATE_POST);
+export const useCreatePost = () =>
+  useMutation(CREATE_POST, {
+    update(cache) {
+      try {
+        Object.keys(cache.data.data).forEach((key) => {
+          key.match(/^Post/) && cache.data.delete(key);
+        });
+      } catch (e) {}
+    },
+  });
