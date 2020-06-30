@@ -221,7 +221,11 @@ export const CREATE_TOPIC = gql`
     $forumCategory: String
   ) {
     createTopic(
-      input: { title: $title, content: $content, forumCategory: $forumCategory }
+      input: {
+        title: $title
+        content: $content
+        forumCategory: $forumCategory
+      }
     ) {
       ${topicResponse}
     }
