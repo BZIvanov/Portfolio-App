@@ -6,9 +6,6 @@ const authenticateUser = (req, options) => {
     console.log('Calling authenticateUser');
 
     const done = (error, user) => {
-      // Here we will get user if user is authenticated
-      // If we will get user we can save session to DB
-
       if (error) {
         return reject(new Error(error));
       }
