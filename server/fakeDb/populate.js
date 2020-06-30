@@ -1,6 +1,6 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
-const fakeDb = require('./FakeDb');
+const fakeDb = require('./fakeDb');
 
 mongoose.connect(
   process.env.DB_URI,
