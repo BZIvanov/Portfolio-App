@@ -23,7 +23,7 @@ const Portfolios = () => {
           {portfolios.map((portfolio) => (
             <div key={portfolio._id} className="col-md-4">
               <Link href="/portfolios/[id]" as={`/portfolios/${portfolio._id}`}>
-                <a className="card-link">
+                <a className="card-link mb-2">
                   <PortfolioCard portfolio={portfolio} />
                 </a>
               </Link>
