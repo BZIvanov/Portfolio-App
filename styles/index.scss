@@ -215,6 +215,9 @@ html {
 
 .portfolio-app {
   height: 100%;
+  .card-body {
+    height: 150px;
+  }
 }
 
 .page-wrapper {
